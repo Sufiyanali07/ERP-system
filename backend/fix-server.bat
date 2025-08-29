@@ -1,0 +1,13 @@
+@echo off
+echo Fixing ERP Backend Server...
+cd /d "C:\Users\hp\Desktop\Next_ERP\backend"
+
+echo Killing existing Node processes...
+taskkill /F /IM node.exe 2>nul
+
+echo Waiting 3 seconds...
+timeout /t 3 /nobreak >nul
+
+echo Starting server...
+node simple-server.js
+pause
