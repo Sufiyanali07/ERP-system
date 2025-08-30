@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription } from "@/components/ui/alert"
 import { ArrowLeft, Mail } from "lucide-react"
 import Link from "next/link"
 
@@ -38,7 +37,7 @@ export default function ForgotPasswordPage() {
                 setIsSuccess(false)
                 setMessage(data.message || 'Failed to send reset email.')
             }
-        } catch (error) {
+        } catch {
             setIsSuccess(false)
             setMessage('Network error. Please try again.')
         } finally {
@@ -58,7 +57,7 @@ export default function ForgotPasswordPage() {
                     </div>
                     <CardTitle className="text-2xl font-bold text-center">Forgot Password</CardTitle>
                     <CardDescription className="text-center">
-                        Enter your email address and we'll send you instructions to reset your password.
+                        Enter your email address and we&apos;ll send you instructions to reset your password.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -80,11 +79,11 @@ export default function ForgotPasswordPage() {
                         </div>
 
                         {message && (
-                            <Alert className={isSuccess ? "border-green-200 bg-green-50" : "border-red-200 bg-red-50"}>
-                                <AlertDescription className={isSuccess ? "text-green-800" : "text-red-800"}>
+                            <div className={`p-3 rounded-md border ${isSuccess ? "border-green-200 bg-green-50" : "border-red-200 bg-red-50"}`}>
+                                <p className={`text-sm ${isSuccess ? "text-green-800" : "text-red-800"}`}>
                                     {message}
-                                </AlertDescription>
-                            </Alert>
+                                </p>
+                            </div>
                         )}
 
                         <Button 
