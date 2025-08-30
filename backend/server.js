@@ -124,29 +124,35 @@ const connectToDatabase = async () => {
     
     try {
         console.log('🔗 Connecting to MongoDB...');
-        console.log('📍 Environment:', process.env.NODE_ENV);
-        console.log('🔑 MongoDB URI exists:', !!process.env.MONGODB_URI);
         
-        cachedConnection = await mongoose.connect(MONGODB_URI, {
+        // Add connection timeout for serverless
+        const connectionPromise = mongoose.connect(MONGODB_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            serverSelectionTimeoutMS: 10000,
-            socketTimeoutMS: 45000,
-            maxPoolSize: 10,
+            serverSelectionTimeoutMS: 5000,
+            socketTimeoutMS: 10000,
+            connectTimeoutMS: 5000,
+            maxPoolSize: 5,
             bufferCommands: false,
             bufferMaxEntries: 0
         });
+
+        // Timeout after 8 seconds to prevent hanging
+        const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => reject(new Error('Connection timeout')), 8000);
+        });
+
+        cachedConnection = await Promise.race([connectionPromise, timeoutPromise]);
         console.log('✅ MongoDB connected successfully');
         return cachedConnection;
     } catch (error) {
         console.error('❌ MongoDB connection failed:', error.message);
-        console.error('❌ Full error:', error);
-        throw new Error(`Database connection failed: ${error.message}`);
+        // Don't throw error to prevent server hanging
+        return null;
     }
 };
 
-// Initialize connection
-connectToDatabase();
+// Don't initialize connection on startup for serverless
 
 // Root route
 app.get('/', (req, res) => {
@@ -168,14 +174,23 @@ app.get('/', (req, res) => {
     });
 });
 
-// Health check
+// Health check endpoint
 app.get('/api/health', async (req, res) => {
-    await connectToDatabase();
-    res.json({ 
-        status: 'OK', 
-        timestamp: new Date().toISOString(),
-        database: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
-    });
+    try {
+        await connectToDatabase();
+        res.json({ 
+            status: 'OK', 
+            timestamp: new Date().toISOString(),
+            database: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
+        });
+    } catch (error) {
+        res.json({ 
+            status: 'OK', 
+            timestamp: new Date().toISOString(),
+            database: 'Connection Error',
+            error: error.message
+        });
+    }
 });
 
 // Signup endpoint
