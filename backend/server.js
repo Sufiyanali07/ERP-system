@@ -181,14 +181,18 @@ app.get('/api/health', async (req, res) => {
         res.json({ 
             status: 'OK', 
             timestamp: new Date().toISOString(),
-            database: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
+            database: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected',
+            mongoUri: !!process.env.MONGODB_URI ? 'Set' : 'Missing',
+            environment: process.env.NODE_ENV || 'undefined'
         });
     } catch (error) {
         res.json({ 
             status: 'OK', 
             timestamp: new Date().toISOString(),
             database: 'Connection Error',
-            error: error.message
+            error: error.message,
+            mongoUri: !!process.env.MONGODB_URI ? 'Set' : 'Missing',
+            environment: process.env.NODE_ENV || 'undefined'
         });
     }
 });
