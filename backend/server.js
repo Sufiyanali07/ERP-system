@@ -30,7 +30,9 @@ const server = createServer(app);
 const allowedOrigins = [
   process.env.FRONTEND_URL || "http://localhost:3000",
   "http://192.168.1.5:3000",
-  "http://localhost:3000"
+  "http://localhost:3000",
+  "https://erp-system-bthbvl5mp-sufiyan-alis-projects-3e38a188.vercel.app",
+  "https://*.vercel.app"
 ];
 
 const io = new Server(server, {
