@@ -120,35 +120,26 @@ const connectToDatabase = async () => {
         return cachedConnection;
     }
     
-    const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://sufiyanali0727:erp1234@cluster0.o7uq2of.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+    // Use environment variable or fallback
+    const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://sufiyanali0727:erp1234@cluster0.o7uq2of.mongodb.net/erp-system';
     
     try {
-        console.log('🔗 Connecting to MongoDB...');
+        console.log('🔗 Attempting MongoDB connection...');
+        console.log('🌐 Using URI pattern:', MONGODB_URI.replace(/\/\/[^:]+:[^@]+@/, '//***:***@'));
         
-        // Add connection timeout for serverless
-        const connectionPromise = mongoose.connect(MONGODB_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            serverSelectionTimeoutMS: 30000,
-            socketTimeoutMS: 45000,
-            connectTimeoutMS: 30000,
-            maxPoolSize: 1,
-            bufferCommands: false,
-            bufferMaxEntries: 0,
-            authSource: 'admin'
-        });
-
-        // Timeout after 20 seconds to prevent hanging
-        const timeoutPromise = new Promise((_, reject) => {
-            setTimeout(() => reject(new Error('Connection timeout after 20s')), 20000);
-        });
-
-        cachedConnection = await Promise.race([connectionPromise, timeoutPromise]);
+        // Disconnect any existing connection
+        if (mongoose.connection.readyState !== 0) {
+            await mongoose.disconnect();
+        }
+        
+        // Simple connection for Vercel
+        cachedConnection = await mongoose.connect(MONGODB_URI);
         console.log('✅ MongoDB connected successfully');
         return cachedConnection;
     } catch (error) {
         console.error('❌ MongoDB connection failed:', error.message);
-        // Don't throw error to prevent server hanging
+        console.error('❌ Error code:', error.code);
+        console.error('❌ Error name:', error.name);
         return null;
     }
 };
