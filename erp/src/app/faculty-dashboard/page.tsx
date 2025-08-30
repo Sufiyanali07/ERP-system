@@ -237,12 +237,13 @@ export default function FacultyDashboard() {
 
         {/* Main Content Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="applications">Applications</TabsTrigger>
             <TabsTrigger value="classes">Classes</TabsTrigger>
             <TabsTrigger value="attendance">Attendance</TabsTrigger>
             <TabsTrigger value="assignments">Assignments</TabsTrigger>
+            <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
@@ -537,6 +538,26 @@ export default function FacultyDashboard() {
                     ))}
                   </TableBody>
                 </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="settings" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Faculty Settings</CardTitle>
+                <CardDescription>Access your personal settings and preferences</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-8">
+                  <p className="text-gray-600 mb-4">Configure your account settings, notifications, and preferences.</p>
+                  <Button 
+                    onClick={() => window.location.href = '/teacher-dashboard/settings'}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    Go to Settings
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
