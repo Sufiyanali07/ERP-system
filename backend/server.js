@@ -120,7 +120,7 @@ const connectToDatabase = async () => {
         return cachedConnection;
     }
     
-    const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://sufiyanali:sufiyanali@cluster0.wgdlm.mongodb.net/erp-system?retryWrites=true&w=majority&appName=Cluster0';
+    const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://sufiyanali0727:erp1234@cluster0.o7uq2of.mongodb.net/erp-system?retryWrites=true&w=majority&appName=Cluster0';
     
     try {
         console.log('🔗 Connecting to MongoDB...');
