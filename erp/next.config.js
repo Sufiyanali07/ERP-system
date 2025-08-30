@@ -1,20 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
+  output: 'export',
   trailingSlash: true,
   images: {
     unoptimized: true
   },
+  distDir: 'out',
   experimental: {
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
-      },
-    },
-  },
+    appDir: true
+  }
 }
 
 module.exports = nextConfig
