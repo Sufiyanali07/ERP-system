@@ -552,7 +552,7 @@ export default function FacultyDashboard() {
                 <div className="text-center py-8">
                   <p className="text-gray-600 mb-4">Configure your account settings, notifications, and preferences.</p>
                   <Button 
-                    onClick={() => window.location.href = '/teacher-dashboard/settings'}
+                    onClick={() => window.location.href = '/settings'}
                     className="bg-blue-600 hover:bg-blue-700"
                   >
                     Go to Settings
