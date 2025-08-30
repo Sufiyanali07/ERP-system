@@ -120,7 +120,7 @@ const connectToDatabase = async () => {
         return cachedConnection;
     }
     
-    const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://sufiyanali0727:erp1234@cluster0.o7uq2of.mongodb.net/erp-system?retryWrites=true&w=majority&appName=Cluster0';
+    const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://sufiyanali0727:erp1234@cluster0.o7uq2of.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
     
     try {
         console.log('🔗 Connecting to MongoDB...');
@@ -129,14 +129,13 @@ const connectToDatabase = async () => {
         const connectionPromise = mongoose.connect(MONGODB_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            serverSelectionTimeoutMS: 15000,
-            socketTimeoutMS: 30000,
-            connectTimeoutMS: 15000,
-            maxPoolSize: 10,
+            serverSelectionTimeoutMS: 30000,
+            socketTimeoutMS: 45000,
+            connectTimeoutMS: 30000,
+            maxPoolSize: 1,
             bufferCommands: false,
             bufferMaxEntries: 0,
-            retryWrites: true,
-            w: 'majority'
+            authSource: 'admin'
         });
 
         // Timeout after 20 seconds to prevent hanging
