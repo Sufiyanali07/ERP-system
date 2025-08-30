@@ -1,6 +1,6 @@
 // API Configuration
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://your-backend-url.vercel.app' // Replace with your deployed backend URL
+  ? 'https://next-erp-backend.vercel.app' // Update this with your actual backend URL
   : 'http://localhost:5000';
 
 export const API_ENDPOINTS = {

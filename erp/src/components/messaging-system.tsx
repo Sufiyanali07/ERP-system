@@ -75,7 +75,7 @@ export default function MessagingSystem() {
       setLoading(true)
       const token = getAuthToken()
       
-      const response = await fetch(`http://localhost:5000/api/messages?type=${type}&search=${searchTerm}`, {
+      const response = await fetch(`https://next-erp-backend.vercel.app/api/messages?type=${type}&search=${searchTerm}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -110,7 +110,7 @@ export default function MessagingSystem() {
     try {
       const token = getAuthToken()
       
-      const response = await fetch('http://localhost:5000/api/messages/users/contacts', {
+      const response = await fetch('https://next-erp-backend.vercel.app/api/messages/users/contacts', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -132,7 +132,7 @@ export default function MessagingSystem() {
     try {
       const token = getAuthToken()
       
-      const response = await fetch('http://localhost:5000/api/messages/stats/overview', {
+      const response = await fetch('https://next-erp-backend.vercel.app/api/messages/stats/overview', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -163,7 +163,7 @@ export default function MessagingSystem() {
 
       const token = getAuthToken()
       
-      const response = await fetch('http://localhost:5000/api/messages', {
+      const response = await fetch('https://next-erp-backend.vercel.app/api/messages', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -221,7 +221,7 @@ export default function MessagingSystem() {
     try {
       const token = getAuthToken()
       
-      await fetch(`http://localhost:5000/api/messages/${messageId}/read`, {
+      await fetch(`https://next-erp-backend.vercel.app/api/messages/${messageId}/read`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
