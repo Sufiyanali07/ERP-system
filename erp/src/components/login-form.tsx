@@ -44,7 +44,7 @@ export default function LoginForm() {
         
         try {
             // Real API call to backend
-            const response = await fetch('https://erp-system-rose.vercel.app/api/auth/login', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

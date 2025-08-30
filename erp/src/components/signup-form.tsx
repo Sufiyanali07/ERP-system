@@ -83,7 +83,7 @@ export default function SignupForm() {
         
         try {
             // Real API call to backend
-            const response = await fetch('https://erp-system-rose.vercel.app/api/auth/signup', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/auth/signup`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
