@@ -18,9 +18,13 @@ app.use(cors({
         'http://192.168.1.5:3000', 
         'http://192.168.1.3:3000',
         'https://erp-system-rose.vercel.app',
-        'https://*.vercel.app'
+        'https://erp-system-f6es.vercel.app',
+        'https://erp-system20.vercel.app',
+        /^https:\/\/.*\.vercel\.app$/
     ],
-    credentials: true
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 
