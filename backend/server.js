@@ -172,8 +172,8 @@ app.get('/api/health', async (req, res) => {
 
 // Signup endpoint
 app.post('/api/auth/signup', async (req, res) => {
-    await connectToDatabase();
     try {
+        await connectToDatabase();
         console.log('📝 Signup request:', req.body);
         
         const { email, password, firstName, lastName, role, ...additionalData } = req.body;
@@ -306,8 +306,8 @@ app.post('/api/auth/signup', async (req, res) => {
 
 // Login endpoint
 app.post('/api/auth/login', async (req, res) => {
-    await connectToDatabase();
     try {
+        await connectToDatabase();
         console.log('🔐 Login request for:', req.body.email);
         
         const { email, password } = req.body;
@@ -389,8 +389,8 @@ app.post('/api/auth/login', async (req, res) => {
 
 // Get all students (no User collection needed)
 app.get('/api/students', async (req, res) => {
-    await connectToDatabase();
     try {
+        await connectToDatabase();
         const students = await Student.find({}, '-password').sort({ createdAt: -1 });
         
         res.json({
@@ -402,15 +402,15 @@ app.get('/api/students', async (req, res) => {
         console.error('Get students error:', error);
         res.status(500).json({ 
             success: false, 
-            message: 'Internal server error' 
+            message: 'Internal server error: ' + error.message 
         });
     }
 });
 
 // Get all faculty (no User collection needed)
 app.get('/api/faculty', async (req, res) => {
-    await connectToDatabase();
     try {
+        await connectToDatabase();
         const faculty = await Faculty.find({}, '-password').sort({ createdAt: -1 });
         
         res.json({
@@ -422,7 +422,47 @@ app.get('/api/faculty', async (req, res) => {
         console.error('Get faculty error:', error);
         res.status(500).json({ 
             success: false, 
-            message: 'Internal server error' 
+            message: 'Internal server error: ' + error.message 
+        });
+    }
+});
+
+// Forgot password endpoint (placeholder)
+app.post('/api/auth/forgot-password', async (req, res) => {
+    try {
+        await connectToDatabase();
+        const { email } = req.body;
+        
+        if (!email) {
+            return res.status(400).json({
+                success: false,
+                message: 'Email is required'
+            });
+        }
+
+        // Check if user exists
+        let user = await Student.findOne({ email });
+        if (!user) {
+            user = await Faculty.findOne({ email });
+        }
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+        // For now, just return success (implement email sending later)
+        res.json({
+            success: true,
+            message: 'Password reset instructions sent to your email'
+        });
+    } catch (error) {
+        console.error('Forgot password error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error: ' + error.message
         });
     }
 });
