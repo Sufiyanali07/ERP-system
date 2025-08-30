@@ -116,24 +116,32 @@ const Faculty = mongoose.model('Faculty', facultySchema);
 let cachedConnection = null;
 
 const connectToDatabase = async () => {
-    if (cachedConnection) {
+    if (cachedConnection && mongoose.connection.readyState === 1) {
         return cachedConnection;
     }
-
-    const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://sufiyanali0727:erp1234@cluster0.o7uq2of.mongodb.net/erp_system?retryWrites=true&w=majority';
+    
+    const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://sufiyanali:sufiyanali@cluster0.wgdlm.mongodb.net/erp-system?retryWrites=true&w=majority&appName=Cluster0';
     
     try {
+        console.log('🔗 Connecting to MongoDB...');
+        console.log('📍 Environment:', process.env.NODE_ENV);
+        console.log('🔑 MongoDB URI exists:', !!process.env.MONGODB_URI);
+        
         cachedConnection = await mongoose.connect(MONGODB_URI, {
-            bufferCommands: false,
-            maxPoolSize: 10,
-            serverSelectionTimeoutMS: 5000,
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            serverSelectionTimeoutMS: 10000,
             socketTimeoutMS: 45000,
+            maxPoolSize: 10,
+            bufferCommands: false,
+            bufferMaxEntries: 0
         });
-        console.log('✅ Connected to MongoDB');
+        console.log('✅ MongoDB connected successfully');
         return cachedConnection;
     } catch (error) {
         console.error('❌ MongoDB connection failed:', error.message);
-        throw error;
+        console.error('❌ Full error:', error);
+        throw new Error(`Database connection failed: ${error.message}`);
     }
 };
 
