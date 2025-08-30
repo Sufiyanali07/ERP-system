@@ -129,17 +129,19 @@ const connectToDatabase = async () => {
         const connectionPromise = mongoose.connect(MONGODB_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            serverSelectionTimeoutMS: 5000,
-            socketTimeoutMS: 10000,
-            connectTimeoutMS: 5000,
-            maxPoolSize: 5,
+            serverSelectionTimeoutMS: 15000,
+            socketTimeoutMS: 30000,
+            connectTimeoutMS: 15000,
+            maxPoolSize: 10,
             bufferCommands: false,
-            bufferMaxEntries: 0
+            bufferMaxEntries: 0,
+            retryWrites: true,
+            w: 'majority'
         });
 
-        // Timeout after 8 seconds to prevent hanging
+        // Timeout after 20 seconds to prevent hanging
         const timeoutPromise = new Promise((_, reject) => {
-            setTimeout(() => reject(new Error('Connection timeout')), 8000);
+            setTimeout(() => reject(new Error('Connection timeout after 20s')), 20000);
         });
 
         cachedConnection = await Promise.race([connectionPromise, timeoutPromise]);
@@ -177,13 +179,15 @@ app.get('/', (req, res) => {
 // Health check endpoint
 app.get('/api/health', async (req, res) => {
     try {
-        await connectToDatabase();
+        const connection = await connectToDatabase();
         res.json({ 
             status: 'OK', 
             timestamp: new Date().toISOString(),
             database: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected',
             mongoUri: !!process.env.MONGODB_URI ? 'Set' : 'Missing',
-            environment: process.env.NODE_ENV || 'undefined'
+            environment: process.env.NODE_ENV || 'undefined',
+            connectionResult: connection ? 'Success' : 'Failed',
+            readyState: mongoose.connection.readyState
         });
     } catch (error) {
         res.json({ 
@@ -192,7 +196,8 @@ app.get('/api/health', async (req, res) => {
             database: 'Connection Error',
             error: error.message,
             mongoUri: !!process.env.MONGODB_URI ? 'Set' : 'Missing',
-            environment: process.env.NODE_ENV || 'undefined'
+            environment: process.env.NODE_ENV || 'undefined',
+            readyState: mongoose.connection.readyState
         });
     }
 });
