@@ -136,6 +136,26 @@ const connectToDatabase = async () => {
 // Initialize connection
 connectToDatabase();
 
+// Root route
+app.get('/', (req, res) => {
+    res.json({
+        message: 'ERP System Backend API',
+        version: '1.0.0',
+        status: 'Running',
+        endpoints: {
+            health: '/api/health',
+            auth: {
+                login: 'POST /api/auth/login',
+                signup: 'POST /api/auth/signup'
+            },
+            data: {
+                students: 'GET /api/students',
+                faculty: 'GET /api/faculty'
+            }
+        }
+    });
+});
+
 // Health check
 app.get('/api/health', async (req, res) => {
     await connectToDatabase();
